@@ -1,0 +1,17 @@
+<html>
+<head>
+
+</head>
+<body>
+<div id="navigation_string">
+<a href="/add_page/">добавить страничку</a>&nbsp;<a href="/add_page/">редактировать страничку</a>
+</div>
+	<ul>
+{% for page in pages %}
+	<li><a href="/{{ page.title }}">{{ page.title }}</a></li>
+{% endfor %}
+	</ul>
+	{{ content }}
+</body>
+
+</html>
