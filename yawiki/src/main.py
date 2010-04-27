@@ -32,7 +32,8 @@ class MainPage(webapp.RequestHandler):
                     up = '#'
                 else:
                     up = page.title.rsplit('/',1)[0]
-                template_values = {"pages":db.GqlQuery("SELECT * FROM Page WHERE level=%d" % ((page.level or 0) + 1)),
+                template_values = {"pages":db.GqlQuery("SELECT * FROM Page WHERE level=%d and title>='%s' and title<'%s'" % 
+                                                       ((page.level or 0) + 1, p,p+ u"\ufffd")),
                                    "content":page.content, "title":page.title, 'up':up}
                 path = os.path.join(os.path.dirname(__file__), os.sep.join(['templates','wikimain.html']))
                 self.response.out.write(template.render(path, template_values))
