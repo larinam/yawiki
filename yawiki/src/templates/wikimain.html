@@ -4,14 +4,19 @@
 </head>
 <body>
 <div id="navigation_string">
-<a href="/add_page/">добавить страничку</a>&nbsp;<a href="/add_page/">редактировать страничку</a>
+<a href="/{{ up }}">наверх</a>&nbsp;
+<a href="/add_page/">добавить страничку</a>&nbsp;
+<a href="/add_page/{{ title }}/">редактировать страничку</a>&nbsp;
+<a href="/del_page/{{ title }}/">удалить страничку</a>&nbsp;
 </div>
 	<ul>
 {% for page in pages %}
 	<li><a href="/{{ page.title }}">{{ page.title }}</a></li>
 {% endfor %}
 	</ul>
+	<p>
 	{{ content }}
+	</p>
 </body>
 
 </html>

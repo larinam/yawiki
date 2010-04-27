@@ -16,4 +16,4 @@ class Page(db.Model):
     title = db.StringProperty(multiline=False)
     content = db.StringProperty(multiline=True)
     children = db.ListProperty(db.Key)
-    level = db.IntegerProperty()
+    level = db.IntegerProperty(default=0)
