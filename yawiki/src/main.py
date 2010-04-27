@@ -62,7 +62,7 @@ class AddPage(webapp.RequestHandler):
         if page != None:
             instance = page
         data_dict = self.request.POST
-        data_dict.update({'level':p.count('/')})
+        data_dict.update({'level':data_dict.get('title','').count('/')})
         data = PageEditForm(data=data_dict, instance=instance)
         if data.is_valid():
             # Save the data, and redirect to the view page
@@ -77,8 +77,12 @@ class DeletePage(webapp.RequestHandler):
     def get(self, p):
         if p and p[-1]=='/':
             p = p[:-1]
+        subpages = db.GqlQuery("SELECT * FROM Page WHERE title>='%s' and title<'%s'" % 
+                                                       (p, p+ u"\ufffd"))
         page = db.GqlQuery("SELECT * FROM Page WHERE title='%s'" % (p)).get()
         page.delete()
+        for p in subpages:
+            p.delete()
         self.redirect('/')
         
 application = webapp.WSGIApplication([(r'^/add_page/(.*)$', AddPage),
