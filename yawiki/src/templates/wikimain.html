@@ -7,7 +7,8 @@
 <a href="/{{ up }}">наверх</a>&nbsp;
 <a href="/add_page/">добавить страничку</a>&nbsp;
 <a href="/add_page/{{ title }}/">редактировать страничку</a>&nbsp;
-<a href="/del_page/{{ title }}/">удалить страничку</a>&nbsp;
+{% if title %}<a href="/del_page/{{ title }}/">удалить страничку</a>&nbsp;{% endif %}
+<a href="/settings/">настройки</a>&nbsp;
 </div>
 	<ul>
 {% for page in pages %}

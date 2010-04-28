@@ -9,16 +9,24 @@ from google.appengine.ext.db import djangoforms
 from google.appengine.ext.webapp import template, template
 from google.appengine.ext.webapp.util import run_wsgi_app, run_wsgi_app
 import cgi
+from WikiSettings import WikiSettings, WikiPageNestingSetting
+from WikiSettingsModels import PageNestingSetting
 
 
-
+def filterPagesLevel(pages, current_level):
+    new_pages = []
+    for i in pages:
+        if i.level >= current_level + 1 and i.level < current_level + 1 + PageNestingSetting.all().get().value:
+            new_pages.append(i)
+    return new_pages
+         
 
 class MainPage(webapp.RequestHandler):
     
     
     def get(self, p):
         if p=="":
-            template_values = {"pages":db.GqlQuery("SELECT * FROM Page WHERE level=0")}
+            template_values = {"pages":db.GqlQuery("SELECT * FROM Page WHERE level=0"), "title":""}
             path = os.path.join(os.path.dirname(__file__), os.sep.join(['templates','wikimain.html']))
             self.response.out.write(template.render(path, template_values))
         else:
@@ -32,8 +40,7 @@ class MainPage(webapp.RequestHandler):
                     up = '#'
                 else:
                     up = page.title.rsplit('/',1)[0]
-                template_values = {"pages":db.GqlQuery("SELECT * FROM Page WHERE level=%d and title>='%s' and title<'%s'" % 
-                                                       ((page.level or 0) + 1, p,p+ u"\ufffd")),
+                template_values = {"pages":filterPagesLevel(db.GqlQuery("SELECT * FROM Page WHERE title>='%s' and title<'%s'" % (p,p+ u"\ufffd")), page.level),
                                    "content":page.content, "title":page.title, 'up':up}
                 path = os.path.join(os.path.dirname(__file__), os.sep.join(['templates','wikimain.html']))
                 self.response.out.write(template.render(path, template_values))
@@ -87,6 +94,12 @@ class DeletePage(webapp.RequestHandler):
         
 application = webapp.WSGIApplication([(r'^/add_page/(.*)$', AddPage),
                                       (r'/del_page/(.*)$', DeletePage),
+                                      (r'/settings/$', WikiSettings),
+                                      (r'/settings/nesting/$', WikiPageNestingSetting),
+                                      (r'/settings/$', WikiSettings),
+                                      (r'/settings/$', WikiSettings),
+                                      (r'/settings/$', WikiSettings),
+                                      (r'/settings/$', WikiSettings),
                                       (r'/(.*)', MainPage),
                                       ],
                                       debug=True)
