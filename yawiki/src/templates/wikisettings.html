@@ -4,6 +4,13 @@
 
 </head>
 <body>
+<div id="navigation_string">
+<a href="/{{ up }}">наверх</a>&nbsp;
+<a href="/add_page/">добавить страничку</a>&nbsp;
+{% if title %}<a href="/add_page/{{ title }}/">редактировать страничку</a>&nbsp;{% endif %}
+{% if title %}<a href="/del_page/{{ title }}/">удалить страничку</a>&nbsp;{% endif %}
+<a href="/settings/">настройки</a>&nbsp;
+</div>
 	<ul>
 		<li>
 			<a href="/settings/nesting/">Отображение уровня вложенности</a>

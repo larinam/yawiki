@@ -11,11 +11,18 @@
 {% if title %}<a href="/del_page/{{ title }}/">удалить страничку</a>&nbsp;{% endif %}
 <a href="/settings/">настройки</a>&nbsp;
 </div>
+	<table>
+	<th>pattern</th><th>target</th>
+	{% for format in formats %}
+		<tr><td>{{format.pattern}}</td><td>{{format.target}}</td></tr>
+	{% endfor %}
+	</table>
 	<form method="POST" action="">
-		<table>
-		{{ page_edit_form }}
+	<table>
+		{{ format_add_form }}
 		<tr><td><input type="submit" /></td></tr>
-		</table>
+	</table>
+	
 	</form>
 </body>
 

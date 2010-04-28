@@ -9,7 +9,7 @@ from google.appengine.ext.db import djangoforms
 from google.appengine.ext.webapp import template, template
 from google.appengine.ext.webapp.util import run_wsgi_app, run_wsgi_app
 import cgi
-from WikiSettings import WikiSettings, WikiPageNestingSetting
+from WikiSettings import WikiSettings, WikiPageNestingSetting, WikiPageFormattingSetting
 from WikiSettingsModels import PageNestingSetting
 
 
@@ -96,7 +96,7 @@ application = webapp.WSGIApplication([(r'^/add_page/(.*)$', AddPage),
                                       (r'/del_page/(.*)$', DeletePage),
                                       (r'/settings/$', WikiSettings),
                                       (r'/settings/nesting/$', WikiPageNestingSetting),
-                                      (r'/settings/$', WikiSettings),
+                                      (r'/settings/format/$', WikiPageFormattingSetting),
                                       (r'/settings/$', WikiSettings),
                                       (r'/settings/$', WikiSettings),
                                       (r'/settings/$', WikiSettings),

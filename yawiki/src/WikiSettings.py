@@ -36,4 +36,25 @@ class WikiPageNestingSetting(webapp.RequestHandler):
         data = PageNestingSettingForm(data=data_dict, instance=instance)
         if data.is_valid():
             entity = data.save(commit=True)
-        self.redirect("/settings/nesting/")
+            self.redirect("/settings/nesting/")
+        else:
+            template_values = {"page_edit_form":data}
+            path = os.path.join(os.path.dirname(__file__), os.sep.join(['templates','wikiedit.html']))
+            self.response.out.write(template.render(path, template_values))
+        
+class WikiPageFormattingSetting(webapp.RequestHandler):
+    def get(self):
+        settings = PageFormattingSetting.all()
+        template_values = {"formats":settings, "format_add_form":PageFormattingSettingForm()}
+        path = os.path.join(os.path.dirname(__file__), os.sep.join(['templates','wikiformat.html']))
+        self.response.out.write(template.render(path, template_values))
+        
+    def post(self):
+        data = PageFormattingSettingForm(data=self.request.POST)
+        if data.is_valid():
+            entity = data.save(commit=True)
+            self.redirect("/settings/format/")
+        else:
+            template_values = {"format_add_form":data}
+            path = os.path.join(os.path.dirname(__file__), os.sep.join(['templates','wikiformat.html']))
+            self.response.out.write(template.render(path, template_values))
