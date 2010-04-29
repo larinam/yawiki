@@ -3,7 +3,6 @@ Created on 28.04.2010
 
 @author: alarin
 '''
-from Page import Page
 from WikiSettingsModels import *
 from google.appengine.api import users
 from google.appengine.ext import db, webapp
@@ -58,3 +57,14 @@ class WikiPageFormattingSetting(webapp.RequestHandler):
             template_values = {"format_add_form":data}
             path = os.path.join(os.path.dirname(__file__), os.sep.join(['templates','wikiformat.html']))
             self.response.out.write(template.render(path, template_values))
+            
+class WikiPageMacrosSetting(webapp.RequestHandler):
+    def get(self):
+        macroses = PageMacrosSetting.all()
+        template_values = {"macroses":macroses, "macros_add_form":PageMacrosSettingForm()}
+        path = os.path.join(os.path.dirname(__file__), os.sep.join(['templates','wikimacros.html']))
+        self.response.out.write(template.render(path, template_values))
+    
+    def put(self):
+        pass
+        

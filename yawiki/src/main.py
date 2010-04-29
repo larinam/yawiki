@@ -9,7 +9,7 @@ from google.appengine.ext.db import djangoforms
 from google.appengine.ext.webapp import template, template
 from google.appengine.ext.webapp.util import run_wsgi_app, run_wsgi_app
 import cgi
-from WikiSettings import WikiSettings, WikiPageNestingSetting, WikiPageFormattingSetting
+from WikiSettings import WikiSettings, WikiPageNestingSetting, WikiPageFormattingSetting, WikiPageMacrosSetting
 from WikiSettingsModels import PageNestingSetting
 
 
@@ -19,6 +19,10 @@ def filterPagesLevel(pages, current_level):
         if i.level >= current_level + 1 and i.level < current_level + 1 + PageNestingSetting.all().get().value:
             new_pages.append(i)
     return new_pages
+
+def applyFormatting(s):
+    formats = PageFormattingSetting.all()
+    
          
 
 class MainPage(webapp.RequestHandler):
@@ -97,7 +101,7 @@ application = webapp.WSGIApplication([(r'^/add_page/(.*)$', AddPage),
                                       (r'/settings/$', WikiSettings),
                                       (r'/settings/nesting/$', WikiPageNestingSetting),
                                       (r'/settings/format/$', WikiPageFormattingSetting),
-                                      (r'/settings/$', WikiSettings),
+                                      (r'/settings/macros/$', WikiPageMacrosSetting),
                                       (r'/settings/$', WikiSettings),
                                       (r'/settings/$', WikiSettings),
                                       (r'/(.*)', MainPage),

@@ -1,0 +1,29 @@
+<html>
+<head>
+
+
+</head>
+<body>
+<div id="navigation_string">
+<a href="/{{ up }}">наверх</a>&nbsp;
+<a href="/add_page/">добавить страничку</a>&nbsp;
+{% if title %}<a href="/add_page/{{ title }}/">редактировать страничку</a>&nbsp;{% endif %}
+{% if title %}<a href="/del_page/{{ title }}/">удалить страничку</a>&nbsp;{% endif %}
+<a href="/settings/">настройки</a>&nbsp;
+</div>
+	<table>
+	<th>macros key</th>
+	{% for macros in macroses %}
+		<tr><td>{{macros}}</td></tr>
+	{% endfor %}
+	</table>
+	<form method="POST" action="">
+	<table>
+		{{ macros_add_form }}
+		<tr><td><input type="submit" /></td></tr>
+	</table>
+	
+	</form>
+</body>
+
+</html>
