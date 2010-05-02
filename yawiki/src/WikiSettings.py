@@ -65,6 +65,18 @@ class WikiPageMacrosSetting(webapp.RequestHandler):
         path = os.path.join(os.path.dirname(__file__), os.sep.join(['templates','wikimacros.html']))
         self.response.out.write(template.render(path, template_values))
     
-    def put(self):
-        pass
-        
+    def post(self):
+        data = PageMacrosSettingForm(data=self.request.POST)
+        if data.is_valid():
+            entity = data.save(commit=True)
+            self.redirect("/settings/macros/")
+        else:
+            template_values = {"macros_add_form":data}
+            path = os.path.join(os.path.dirname(__file__), os.sep.join(['templates','wikimacros.html']))
+            self.response.out.write(template.render(path, template_values))
+
+class WikiPageMacrosSettingDel(webapp.RequestHandler):
+    def get(self, id):
+        macros = PageMacrosSetting.get_by_id(int(id))
+        macros.delete()
+        self.redirect("/settings/macros/")

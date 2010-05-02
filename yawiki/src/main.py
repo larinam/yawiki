@@ -9,8 +9,8 @@ from google.appengine.ext.db import djangoforms
 from google.appengine.ext.webapp import template, template
 from google.appengine.ext.webapp.util import run_wsgi_app, run_wsgi_app
 import cgi
-from WikiSettings import WikiSettings, WikiPageNestingSetting, WikiPageFormattingSetting, WikiPageMacrosSetting
-from WikiSettingsModels import PageNestingSetting
+from WikiSettings import WikiSettings, WikiPageNestingSetting, WikiPageFormattingSetting, WikiPageMacrosSetting, WikiPageMacrosSettingDel
+from WikiSettingsModels import PageNestingSetting, PageMacrosSetting, PageFormattingSetting
 
 
 def filterPagesLevel(pages, current_level):
@@ -20,14 +20,38 @@ def filterPagesLevel(pages, current_level):
             new_pages.append(i)
     return new_pages
 
+
+import re
+
+ 
+
+def replace_words(text, word_dic):
+    """
+    take a text and replace words that match a key in a dictionary with
+    the associated value, return the changed text
+    """
+    rc = re.compile('|'.join(map(re.escape, word_dic)))
+    def translate(match):
+        return word_dic[match.group(0)]
+    return rc.sub(translate, text)
+
+def applyMacroses(s):
+    macroses = PageMacrosSetting.all()
+    word_dic = {}
+    for m in macroses:
+        word_dic.update({m.label:str(eval(m.macros))})
+    return replace_words(s, word_dic)
+
 def applyFormatting(s):
     formats = PageFormattingSetting.all()
+    return s
     
-         
+def applySettingsToContent(s):
+    s = applyMacroses(s)
+    s = applyFormatting(s)
+    return s
 
 class MainPage(webapp.RequestHandler):
-    
-    
     def get(self, p):
         if p=="":
             template_values = {"pages":db.GqlQuery("SELECT * FROM Page WHERE level=0"), "title":""}
@@ -45,7 +69,7 @@ class MainPage(webapp.RequestHandler):
                 else:
                     up = page.title.rsplit('/',1)[0]
                 template_values = {"pages":filterPagesLevel(db.GqlQuery("SELECT * FROM Page WHERE title>='%s' and title<'%s'" % (p,p+ u"\ufffd")), page.level),
-                                   "content":page.content, "title":page.title, 'up':up}
+                                   "content":applySettingsToContent(page.content), "title":page.title, 'up':up}
                 path = os.path.join(os.path.dirname(__file__), os.sep.join(['templates','wikimain.html']))
                 self.response.out.write(template.render(path, template_values))
             
@@ -102,7 +126,7 @@ application = webapp.WSGIApplication([(r'^/add_page/(.*)$', AddPage),
                                       (r'/settings/nesting/$', WikiPageNestingSetting),
                                       (r'/settings/format/$', WikiPageFormattingSetting),
                                       (r'/settings/macros/$', WikiPageMacrosSetting),
-                                      (r'/settings/$', WikiSettings),
+                                      (r'/settings/macros/del/(\d*)$', WikiPageMacrosSettingDel),
                                       (r'/settings/$', WikiSettings),
                                       (r'/(.*)', MainPage),
                                       ],
