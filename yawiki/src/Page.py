@@ -13,7 +13,7 @@ Created on 26.04.2010
 class Page(db.Model):
     '''wiki page'''
     
-    title = db.StringProperty(multiline=False)
+    title = db.StringProperty(multiline=False, required=True)
     content = db.StringProperty(multiline=True)
     children = db.ListProperty(db.Key)
     level = db.IntegerProperty(default=0)

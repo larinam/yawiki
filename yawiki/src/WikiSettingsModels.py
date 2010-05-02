@@ -20,7 +20,7 @@ class PageMacrosSettingMacrosValidator:
 
 
 class PageNestingSetting(db.Model):
-    value = db.IntegerProperty(default=1)
+    value = db.IntegerProperty(default=1, required=True)
     
 class PageNestingSettingForm(djangoforms.ModelForm):
     class Meta:
@@ -28,8 +28,8 @@ class PageNestingSettingForm(djangoforms.ModelForm):
         exclude = []
         
 class PageFormattingSetting(db.Model):
-    pattern = db.StringProperty(multiline=False)
-    target = db.StringProperty(multiline=False)
+    pattern = db.StringProperty(multiline=False, required=True)
+    target = db.StringProperty(multiline=False, required=True)
     
 class PageFormattingSettingForm(djangoforms.ModelForm):
     class Meta:
@@ -37,7 +37,7 @@ class PageFormattingSettingForm(djangoforms.ModelForm):
         exclude = []
     
 class PageMacrosSetting(db.Model):
-    label = db.StringProperty(multiline=False)
+    label = db.StringProperty(multiline=False, required=True)
     macros = db.StringProperty(multiline=True, validator=PageMacrosSettingMacrosValidator())
     
 class PageMacrosSettingForm(djangoforms.ModelForm):

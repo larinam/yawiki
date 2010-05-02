@@ -15,9 +15,10 @@ from WikiSettingsModels import PageNestingSetting, PageMacrosSetting, PageFormat
 
 
 def filterPagesLevel(pages, current_level):
+    
     new_pages = []
     for i in pages:
-        if i.level >= current_level + 1 and i.level < current_level + 1 + PageNestingSetting.all().get().value:
+        if i.level >= current_level + 1 and i.level < current_level + 1 + getNestingValue():
             new_pages.append(i)
     return new_pages
 
@@ -50,12 +51,21 @@ def applySettingsToContent(s):
     s = applyFormatting(s)
     return s
 
+def getNestingValue():
+        nestingSetting = PageNestingSetting.all().get()
+        if not nestingSetting:
+            nestingSetting = 1
+        else:
+            nestingSetting = nestingSetting.value
+        return nestingSetting
+
 class MainPage(webapp.RequestHandler):
+
+    
+
     def get(self, p):
+        nestingSetting = getNestingValue()
         if p=="":
-            nestingSetting = PageNestingSetting.all().get()
-            if not nestingSetting:
-                nestingSetting = 1
             template_values = {"pages":db.GqlQuery("SELECT * FROM Page WHERE level<%d" % (nestingSetting)), "title":""}
             path = os.path.join(os.path.dirname(__file__), os.sep.join(['templates','wikimain.html']))
             self.response.out.write(template.render(path, template_values))
