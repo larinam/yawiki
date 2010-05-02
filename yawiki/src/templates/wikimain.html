@@ -1,23 +1,32 @@
 <html>
 <head>
-
+<title>{{ title }}</title>
 </head>
 <body>
-<div id="navigation_string">
-<a href="/{{ up }}">наверх</a>&nbsp;
-<a href="/add_page/">добавить страничку</a>&nbsp;
-<a href="/add_page/{{ title }}/">редактировать страничку</a>&nbsp;
-{% if title %}<a href="/del_page/{{ title }}/">удалить страничку</a>&nbsp;{% endif %}
-<a href="/settings/">настройки</a>&nbsp;
-</div>
-	<ul>
-{% for page in pages %}
-	<li><a href="/{{ page.title }}">{{ page.title }}</a></li>
-{% endfor %}
-	</ul>
-	<p>
-	{{ content }}
-	</p>
+	<div id="navigation_string">
+		<a href="/{{ up }}">наверх</a>&nbsp;
+		<a href="/add_page/">добавить страничку</a>&nbsp;
+		<a href="/add_page/{{ title }}/">редактировать страничку</a>&nbsp;
+		{% if title %}<a href="/del_page/{{ title }}/">удалить страничку</a>&nbsp;{% endif %}
+		<a href="/settings/">настройки</a>&nbsp;
+	</div>
+	<table>
+		<tr>
+			<td>
+			<ul>
+		{% for page in pages %}
+			<li><a href="/{{ page.title }}">{{ page.title }}</a></li>
+		{% endfor %}
+			</ul>
+			</td>
+			<Td>
+			<p>
+			<h1>{{ title }}</h1>
+			{{ content }}
+			</p>
+			</Td>
+		</tr>
+	</table>
 </body>
 
 </html>

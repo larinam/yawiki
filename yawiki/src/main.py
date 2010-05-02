@@ -1,6 +1,7 @@
 import os
 os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 
+import re
 from Page import Page
 from PageForms import PageEditForm
 from google.appengine.api import users
@@ -19,11 +20,6 @@ def filterPagesLevel(pages, current_level):
         if i.level >= current_level + 1 and i.level < current_level + 1 + PageNestingSetting.all().get().value:
             new_pages.append(i)
     return new_pages
-
-
-import re
-
- 
 
 def replace_words(text, word_dic):
     """
@@ -54,7 +50,7 @@ def applySettingsToContent(s):
 class MainPage(webapp.RequestHandler):
     def get(self, p):
         if p=="":
-            template_values = {"pages":db.GqlQuery("SELECT * FROM Page WHERE level=0"), "title":""}
+            template_values = {"pages":db.GqlQuery("SELECT * FROM Page WHERE level<%d" % (PageNestingSetting.all().get().value)), "title":""}
             path = os.path.join(os.path.dirname(__file__), os.sep.join(['templates','wikimain.html']))
             self.response.out.write(template.render(path, template_values))
         else:

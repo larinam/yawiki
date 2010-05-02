@@ -11,6 +11,14 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 import cgi
 import os
 
+class PageMacrosSettingMacrosValidator:
+    def __call__(self, value):
+        try:
+            eval(value)
+        except:
+            raise ValueError('Item content "%s" is not acceptable. Shold be evaluated with "eval" function.' % value)
+
+
 class PageNestingSetting(db.Model):
     value = db.IntegerProperty(default=1)
     
@@ -30,7 +38,7 @@ class PageFormattingSettingForm(djangoforms.ModelForm):
     
 class PageMacrosSetting(db.Model):
     label = db.StringProperty(multiline=False)
-    macros = db.StringProperty(multiline=True)
+    macros = db.StringProperty(multiline=True, validator=PageMacrosSettingMacrosValidator())
     
 class PageMacrosSettingForm(djangoforms.ModelForm):
     class Meta:
