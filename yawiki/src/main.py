@@ -36,7 +36,10 @@ def applyMacroses(s):
     word_dic = {}
     for m in macroses:
         word_dic.update({m.label:str(eval(m.macros))})
-    return replace_words(s, word_dic)
+    if word_dic: 
+        return replace_words(s, word_dic) 
+    else: 
+        return s
 
 def applyFormatting(s):
     formats = PageFormattingSetting.all()
@@ -50,7 +53,10 @@ def applySettingsToContent(s):
 class MainPage(webapp.RequestHandler):
     def get(self, p):
         if p=="":
-            template_values = {"pages":db.GqlQuery("SELECT * FROM Page WHERE level<%d" % (PageNestingSetting.all().get().value)), "title":""}
+            nestingSetting = PageNestingSetting.all().get()
+            if not nestingSetting:
+                nestingSetting = 1
+            template_values = {"pages":db.GqlQuery("SELECT * FROM Page WHERE level<%d" % (nestingSetting)), "title":""}
             path = os.path.join(os.path.dirname(__file__), os.sep.join(['templates','wikimain.html']))
             self.response.out.write(template.render(path, template_values))
         else:

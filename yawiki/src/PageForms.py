@@ -8,12 +8,14 @@ import cgi
 import os
 
 
+
 '''
 Created on 26.04.2010
 
 @author: alarin
 '''
 class PageEditForm(djangoforms.ModelForm):
+    
     class Meta:
         model = Page
         exclude = ['children']
