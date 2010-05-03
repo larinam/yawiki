@@ -10,7 +10,7 @@ from google.appengine.ext.db import djangoforms
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
 import cgi
-
+from DefaultFormatting import formatting
 import os
 
 class WikiSettings(webapp.RequestHandler):
@@ -43,7 +43,7 @@ class WikiPageNestingSetting(webapp.RequestHandler):
         
 class WikiPageFormattingSetting(webapp.RequestHandler):
     def get(self):
-        settings = PageFormattingSetting.all()
+        settings =  PageFormattingSetting.all()
         template_values = {"formats":settings, "format_add_form":PageFormattingSettingForm()}
         path = os.path.join(os.path.dirname(__file__), os.sep.join(['templates','wikiformat.html']))
         self.response.out.write(template.render(path, template_values))
@@ -57,6 +57,12 @@ class WikiPageFormattingSetting(webapp.RequestHandler):
             template_values = {"format_add_form":data}
             path = os.path.join(os.path.dirname(__file__), os.sep.join(['templates','wikiformat.html']))
             self.response.out.write(template.render(path, template_values))
+            
+class WikiPageFormattingSettingDel(webapp.RequestHandler):
+    def get(self, id):
+        setting = PageFormattingSetting.get_by_id(int(id))
+        setting.delete()
+        self.redirect("/settings/format/")
             
 class WikiPageMacrosSetting(webapp.RequestHandler):
     def get(self):

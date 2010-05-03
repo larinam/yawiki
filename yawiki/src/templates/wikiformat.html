@@ -15,15 +15,17 @@
 	<table>
 	<th>pattern</th><th>target</th>
 	{% for format in formats %}
-		<tr><td>{{format.pattern}}</td><td>{{format.target}}</td></tr>
+		<tr><td>{{format.pattern}}</td><td>{{format.target}}</td><td><a href="del/{{format.key.id}}">удалить</a></td></tr>
 	{% endfor %}
 	</table>
+	<p>В поле pattern вводится шаблон в читабельном человеком формате, который будет заменяться на целевое отображение.</p>
+	<p>В поле regex pattern вводится regex шаблон для поиска шаблона в тексте, записанного в human readable виде.</p>
+	<p>В поле target вводится текст, на который будет произведена замена, где \1 должен быть на месте текста, который вставляется.</p>
 	<form method="POST" action="">
 	<table>
 		{{ format_add_form }}
 		<tr><td><input type="submit" /></td></tr>
 	</table>
-	
 	</form>
 </body>
 

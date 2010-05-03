@@ -28,8 +28,9 @@ class PageNestingSettingForm(djangoforms.ModelForm):
         exclude = []
         
 class PageFormattingSetting(db.Model):
-    pattern = db.StringProperty(multiline=False, required=True)
-    target = db.StringProperty(multiline=False, required=True)
+    pattern = db.StringProperty(multiline=False, required=True) #human readable 
+    regex_pattern = db.StringProperty(multiline=False, required=True) #regex pattern
+    target = db.StringProperty(multiline=False, required=True) #target replacement
     
 class PageFormattingSettingForm(djangoforms.ModelForm):
     class Meta:

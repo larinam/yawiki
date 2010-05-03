@@ -10,12 +10,12 @@ from google.appengine.ext.db import djangoforms
 from google.appengine.ext.webapp import template, template
 from google.appengine.ext.webapp.util import run_wsgi_app, run_wsgi_app
 import cgi
-from WikiSettings import WikiSettings, WikiPageNestingSetting, WikiPageFormattingSetting, WikiPageMacrosSetting, WikiPageMacrosSettingDel
+from WikiSettings import WikiSettings, WikiPageNestingSetting, WikiPageFormattingSetting, WikiPageMacrosSetting, WikiPageMacrosSettingDel, WikiPageFormattingSettingDel
 from WikiSettingsModels import PageNestingSetting, PageMacrosSetting, PageFormattingSetting
+from DefaultFormatting import formatting
 
 
 def filterPagesLevel(pages, current_level):
-    
     new_pages = []
     for i in pages:
         if i.level >= current_level + 1 and i.level < current_level + 1 + getNestingValue():
@@ -44,6 +44,11 @@ def applyMacroses(s):
 
 def applyFormatting(s):
     formats = PageFormattingSetting.all()
+    compiled_regexps = []
+    for i in formats:
+        s = re.compile(i.regex_pattern).sub(i.target, s)
+    for i in formatting:
+        s = re.compile(i.regex_pattern).sub(i.target, s)
     return s
 
 wikiwords = re.compile(r"\b([A-Z]\w+[A-Z]+[\w/]+)")
@@ -51,7 +56,6 @@ def applyWikiWords(s):
     s = wikiwords.sub(r'<a href="/\1">\1</a>', s)
     return s
 
-    
 def applySettingsToContent(s):
     s = applyMacroses(s)
     s = applyFormatting(s)
@@ -143,7 +147,7 @@ application = webapp.WSGIApplication([(r'^/add_page/(.*)$', AddPage),
                                       (r'/settings/format/$', WikiPageFormattingSetting),
                                       (r'/settings/macros/$', WikiPageMacrosSetting),
                                       (r'/settings/macros/del/(\d*)$', WikiPageMacrosSettingDel),
-                                      (r'/settings/$', WikiSettings),
+                                      (r'/settings/format/del/(\d*)$', WikiPageFormattingSettingDel),
                                       (r'/(.*)', MainPage),
                                       ],
                                       debug=True)
