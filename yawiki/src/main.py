@@ -45,10 +45,17 @@ def applyMacroses(s):
 def applyFormatting(s):
     formats = PageFormattingSetting.all()
     return s
+
+wikiwords = re.compile(r"\b([A-Z]\w+[A-Z]+[\w/]+)")
+def applyWikiWords(s):
+    s = wikiwords.sub(r'<a href="/\1">\1</a>', s)
+    return s
+
     
 def applySettingsToContent(s):
     s = applyMacroses(s)
     s = applyFormatting(s)
+    s = applyWikiWords(s)
     return s
 
 def getNestingValue():
@@ -60,9 +67,6 @@ def getNestingValue():
         return nestingSetting
 
 class MainPage(webapp.RequestHandler):
-
-    
-
     def get(self, p):
         nestingSetting = getNestingValue()
         if p=="":
