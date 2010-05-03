@@ -13,6 +13,7 @@ import cgi
 from WikiSettings import WikiSettings, WikiPageNestingSetting, WikiPageFormattingSetting, WikiPageMacrosSetting, WikiPageMacrosSettingDel, WikiPageFormattingSettingDel
 from WikiSettingsModels import PageNestingSetting, PageMacrosSetting, PageFormattingSetting
 from DefaultFormatting import formatting
+import cgi
 
 
 def filterPagesLevel(pages, current_level):
@@ -57,6 +58,7 @@ def applyWikiWords(s):
     return s
 
 def applySettingsToContent(s):
+    s = cgi.escape(s)
     s = applyMacroses(s)
     s = applyFormatting(s)
     s = applyWikiWords(s)
